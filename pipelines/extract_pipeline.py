@@ -4,6 +4,7 @@ import pandas as pd
 
 from typing import *
 from helpers import WordHelper
+from pdfplumber.page import Page
 
 
 def get_title_codes(folder_name: str = 'data/inlineXBRL') -> List[str]:
@@ -29,29 +30,28 @@ def get_title_codes(folder_name: str = 'data/inlineXBRL') -> List[str]:
 def read_pdf(filepath: str):
     table_dictionary = {}
     with pdfplumber.open(filepath) as pdf:
-        for page in pdf.pages:
-            print('_' * 50)
-            table = page.extract_table()
-            columns = table[0]
-            rows = table[1:]
-            dataframe = pd.DataFrame(rows, columns=columns)
-
-            print(f'Columns: {columns}')
-            print(dataframe.head(20))
-
-
-def extract_table_from_pdf(filepath: str):
-    with pdfplumber.open(filepath) as pdf:
-
+        pages = []
         for index, page in enumerate(pdf.pages):
-            if index != 1:
-                continue
-            words = page.extract_words(x_tolerance=3, y_tolerance=3)
-            lines = {}
+            if index == 1 or index == 2:
+                pages.append(page)
+            
+            if index == 3:
+                extract_table_from_pdf(pages=pages)
+                break
 
-            for w in words:
-                y = round(w["top"], 1)
-                lines.setdefault(y, []).append(w)
 
-            print(lines)
-            break
+def extract_table_from_pdf(pages: List[Page]):
+    data = []
+    for index, page in enumerate(pages):
+        words = page.extract_words(x_tolerance=3, y_tolerance=3)
+        lines = {}
+
+        for w in words:
+            y = round(w["top"], 1)
+            lines.setdefault(y, []).append(w)
+        
+        for y, words in sorted(lines.items()):
+                words.sort(key=lambda x: x["x0"])
+                data.append(w['text'] for w in words)
+
+    print(data)

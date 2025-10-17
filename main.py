@@ -1,7 +1,7 @@
 ﻿def main():
-    from pipelines.extract_pipeline import extract_table_from_pdf
+    from pipelines.extract_pipeline import read_pdf
 
-    result = extract_table_from_pdf(filepath='data/FinancialStatement-2024-Tahunan-EKAD.pdf')
+    result = read_pdf(filepath='data/FinancialStatement-2024-Tahunan-EKAD.pdf')
 
 
 if __name__ == "__main__":
