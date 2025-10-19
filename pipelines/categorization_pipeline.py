@@ -1,11 +1,12 @@
 ﻿import pandas as pd
 import os
 import re
+import json
 
 from prompt.categorize_prompt import CategorizePrompt
 from typing import *
 
-VALID_PROCESSED_FOLDER = 'data/valid_processed'
+PROCESSED_FOLDER_JSON = 'data/processed_json'
 LABELED_PROCESSED_FOLDER = 'data/labeled_data'
 
 
@@ -20,18 +21,22 @@ def extract_title_from_path(filepath: str) -> str:
     return match.group(1) if match else name
 
 
+def get_json_file(filepath: str):
+    with open(filepath, "r", encoding="utf-8") as f:
+        data = json.load(f)
+        return data
+
+
 def retrieve_data(filepath: Optional[str] = None,
                   code: Optional[str] = None) -> pd.DataFrame:
     if filepath is not None:
-        df = pd.read_csv(filepath)
-        return df, extract_title_from_path(filepath)
+        return get_json_file(filepath)
 
-    filenames = os.listdir(VALID_PROCESSED_FOLDER)
+    filenames = os.listdir(PROCESSED_FOLDER_JSON)
     for filename in filenames:
         if code in filename:
-            path = os.path.join(VALID_PROCESSED_FOLDER, filename)
-            df = pd.read_csv(path)
-            return df, filename.split('.')[0]
+            path = os.path.join(PROCESSED_FOLDER_JSON, filename)
+            return get_json_file(path)
 
     raise FileNotFoundError("Code is not found in valid processed folder")
 
@@ -44,7 +49,11 @@ def categorize_data(use_gemini: bool,
 
     prompter = CategorizePrompt(use_gemini)
 
-    df, title = retrieve_data(filepath, code)
+    data = retrieve_data(filepath, code)
+    df = pd.DataFrame(data['data'])
+    title = data['title']
+    header_descriptions = data['descriptions']
+
     cols = df.columns
     desc_cols = [col for col in cols if 'desc' in col]
     general_labels = []
@@ -54,17 +63,22 @@ def categorize_data(use_gemini: bool,
         row_descriptions = [row[col] for col in desc_cols]
         general_label, detailed_label = prompter.classify(
             descriptions=row_descriptions,
-            title=title
+            title=title,
+            header_descriptions=header_descriptions
         )
         general_labels.append(general_label)
         detailed_labels.append(detailed_label)
 
+    df = df[:index + 1]
     df['General Label'] = general_labels
     df['Detailed Label'] = detailed_labels
 
     os.makedirs(LABELED_PROCESSED_FOLDER, exist_ok=True)
-    save_path = os.path.join(LABELED_PROCESSED_FOLDER, f'{title}.csv')
+    save_path = os.path.join(LABELED_PROCESSED_FOLDER, f'{title}.json')
 
-    print(f"Dataframe saved in {save_path}")
-    df.to_csv(save_path)
-    return df
+    data['data'] = df.to_dict(orient='records')
+    with open(save_path, 'w', encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+    print(f"Json saved in {save_path}")
+
+    return data
