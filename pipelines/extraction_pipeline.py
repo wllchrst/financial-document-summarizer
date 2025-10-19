@@ -48,7 +48,10 @@ def extract_pdf(filepath: str):
     extractions = {}
 
     def save_and_store(content_code: str):
-        dataframe, title, descriptions = extract_bilingual_lines(
+        if '1000000' not in content_code:
+            return
+
+        dataframe, title, descriptions = extract_all_data(
             pages=pages,
             y_threshold=3,
         )
@@ -103,28 +106,19 @@ def extract_pdf(filepath: str):
     return extractions
 
 
-def extract_bilingual_lines(pages: List[Page],
-                            y_threshold=3,
-                            gap_threshold=4) -> Tuple[pd.DataFrame, str, List[str]]:
-    """
-    Groups words by line, then splits them into multiple parts
-    based on horizontal gaps (e.g. left + right bilingual text).
-    For each cluster, stores both text and rounded height (max - min vertical range).
-    """
-    # if "10000" not in pages[0].extract_text():
-    #     return None, None, None
-
+def extract_all_data(pages: List[Page],
+                     y_threshold=3,
+                     gap_threshold=4) -> Tuple[pd.DataFrame, str, List[str]]:
     final_data = []
     max_height = 0
     min_height = float('inf')
     main_page_parsed = False
 
     for page_idx, page in enumerate(pages, start=1):
-        data = []
         rects = page.rects
         words = page.extract_words(x_tolerance=3, y_tolerance=3)
-        lines = {}
 
+        lines = {}
         for w in words:
             y = round(w["top"], 1)
             matched_y = None
@@ -138,54 +132,59 @@ def extract_bilingual_lines(pages: List[Page],
             else:
                 lines[y] = [w]
 
-        for y, items in sorted(lines.items()):
-            items.sort(key=lambda x: x["x0"])
-            clusters = []
-
-            current_cluster = [items[0]]
-
-            for i in range(1, len(items)):
-                prev_x = items[i - 1]["x1"]
-                curr_x = items[i]["x0"]
-                gap = curr_x - prev_x
-
-                if gap > gap_threshold:
-                    top_vals = [w["top"] for w in current_cluster]
-                    bottom_vals = [w["bottom"] for w in current_cluster]
-                    cluster_height = round(max(bottom_vals) - min(top_vals))
-                    max_height = max(max_height, cluster_height)
-                    min_height = min(min_height, cluster_height)
-
-                    clusters.append(make_cluster(current_cluster, height=cluster_height))
-                    current_cluster = [items[i]]
-                else:
-                    current_cluster.append(items[i])
-
-            top_vals = [w["top"] for w in current_cluster]
-            bottom_vals = [w["bottom"] for w in current_cluster]
-            cluster_height = round(max(bottom_vals) - min(top_vals))
-            max_height = max(max_height, cluster_height)
-            min_height = min(min_height, cluster_height)
-
-            clusters.append(make_cluster(current_cluster, height=cluster_height))
-            data.append(clusters)
+        data, max_height, min_height = create_clusters(lines, gap_threshold, max_height, min_height)
 
         if main_page_parsed:
-            _, _, _, _, rows = group_vertically(data, rects, max_height=max_height,
-                                                min_height=min_height,
-                                                main_page_parsed=main_page_parsed)
+            _, _, _, _, rows = group_vertically(data, rects, max_height, min_height, main_page_parsed)
         else:
-            title, descriptions, column_barriers, value_columns, rows = group_vertically(data, rects,
-                                                                                         max_height=max_height,
-                                                                                         min_height=min_height,
-                                                                                         main_page_parsed=main_page_parsed)
+            title, descriptions, column_barriers, value_columns, rows = group_vertically(
+                data, rects, max_height, min_height, main_page_parsed
+            )
 
-        final_result = format_final_result(column_barriers=column_barriers, value_columns=value_columns, rows=rows)
+        final_result = format_final_result(column_barriers, value_columns, rows)
         main_page_parsed = True
         final_data += final_result
 
     df = format_into_df(final_data, desc_columns=column_barriers, value_columns=value_columns)
     return df, title, descriptions
+
+
+def create_clusters(lines, gap_threshold, max_height, min_height):
+    clusters_per_line = []
+
+    for y, items in sorted(lines.items()):
+        items.sort(key=lambda x: x["x0"])
+        clusters = []
+        current_cluster = [items[0]]
+
+        for i in range(1, len(items)):
+            prev_x = items[i - 1]["x1"]
+            curr_x = items[i]["x0"]
+            gap = curr_x - prev_x
+
+            if gap > gap_threshold:
+                top_vals = [w["top"] for w in current_cluster]
+                bottom_vals = [w["bottom"] for w in current_cluster]
+                cluster_height = round(max(bottom_vals) - min(top_vals))
+                max_height = max(max_height, cluster_height)
+                min_height = min(min_height, cluster_height)
+
+                clusters.append(make_cluster(current_cluster, height=cluster_height))
+                current_cluster = [items[i]]
+            else:
+                current_cluster.append(items[i])
+
+        # process last cluster
+        top_vals = [w["top"] for w in current_cluster]
+        bottom_vals = [w["bottom"] for w in current_cluster]
+        cluster_height = round(max(bottom_vals) - min(top_vals))
+        max_height = max(max_height, cluster_height)
+        min_height = min(min_height, cluster_height)
+
+        clusters.append(make_cluster(current_cluster, height=cluster_height))
+        clusters_per_line.append(clusters)
+
+    return clusters_per_line, max_height, min_height
 
 
 def make_cluster(words, height):
