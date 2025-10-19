@@ -1,12 +1,15 @@
 ﻿import os
 import pdfplumber
 import pandas as pd
+import json
+import re
 
 from typing import *
 from helpers import WordHelper
 from pdfplumber.page import Page
 
 PROCESSED_FOLDER_PATH = 'data/processed'
+PROCESSED_FOLDER_PATH_JSON = 'data/processed_json'
 
 
 def get_title_codes(folder_name: str = 'data/inlineXBRL') -> List[str]:
@@ -20,42 +23,74 @@ def get_title_codes(folder_name: str = 'data/inlineXBRL') -> List[str]:
     filenames = os.listdir(folder_name)
     for filename in filenames:
         code_name = filename.split('.')[0]
-        code_name = WordHelper.filter_numeric(code_name)
         if code_name in codes:
             continue
 
-        codes.append(code_name)
+        description = ''
+        if 'BD' in code_name:
+            description = '(breakdown)'
+        elif 'PY' in code_name:
+            description = 'Prior Year'
+
+        codes.append({
+            'filtered': WordHelper.filter_numeric(code_name),
+            'raw': code_name,
+            'description': description
+        })
 
     return codes
 
 
 def extract_pdf(filepath: str):
     os.makedirs(PROCESSED_FOLDER_PATH, exist_ok=True)
+    os.makedirs(PROCESSED_FOLDER_PATH_JSON, exist_ok=True)
     codes = get_title_codes()
     extractions = {}
 
-    def save_and_store(pages, page_indices, code):
-        extraction_result, title = extract_bilingual_lines(
+    def save_and_store(content_code: str):
+        dataframe, title, descriptions = extract_bilingual_lines(
             pages=pages,
-            code=code,
             y_threshold=3,
-            filepath=filepath,
-            page_indices=page_indices
         )
-        if extraction_result is not None:
-            extraction_result.to_csv(f"{PROCESSED_FOLDER_PATH}/{title}.csv")
-        extractions[code] = extraction_result
+        extraction_result = None
+
+        if dataframe is not None:
+            match = re.search(r'\[(.*?)\]', title)
+            c = match.group(1)
+            py_information = '' if 'prior year' not in title.lower() else '_PriorYear'
+            filename = c + py_information
+
+            dataframe.to_csv(f"{PROCESSED_FOLDER_PATH}/{filename}.csv", index=False)
+            data_records = dataframe.to_dict(orient="records")
+
+            extraction_result = {
+                "code": content_code,
+                "title": title,
+                "descriptions": descriptions,
+                "data": data_records
+            }
+
+            with open(f"{PROCESSED_FOLDER_PATH_JSON}/{filename}.json", "w", encoding="utf-8") as f:
+                json.dump(extraction_result, f, indent=2, ensure_ascii=False)
+
+        extractions[content_code] = extraction_result
 
     with pdfplumber.open(filepath) as pdf:
         pages, page_indices, current_code = [], [], None
 
         for index, page in enumerate(pdf.pages):
             content = page.extract_text() or ""
-            code_found = next((code for code in codes if code in content), None)
+            code_found = None
+
+            for code in codes:
+                filtered = code['filtered']
+                raw = code['raw']
+                if filtered in content and code['description'] in content:
+                    code_found = raw
 
             if code_found:
                 if current_code:
-                    save_and_store(pages, page_indices, current_code)
+                    save_and_store(content_code=current_code)
                 pages, page_indices = [page], [index]
                 current_code = code_found
             elif current_code:
@@ -63,22 +98,22 @@ def extract_pdf(filepath: str):
                 page_indices.append(index)
 
         if current_code and current_code not in extractions:
-            save_and_store(pages, page_indices, current_code)
+            save_and_store(content_code=current_code)
 
     return extractions
 
 
 def extract_bilingual_lines(pages: List[Page],
-                            code: str,
-                            filepath: str,
-                            page_indices: List[int],
                             y_threshold=3,
-                            gap_threshold=4) -> Tuple[pd.DataFrame, str]:
+                            gap_threshold=4) -> Tuple[pd.DataFrame, str, List[str]]:
     """
     Groups words by line, then splits them into multiple parts
     based on horizontal gaps (e.g. left + right bilingual text).
     For each cluster, stores both text and rounded height (max - min vertical range).
     """
+    # if "10000" not in pages[0].extract_text():
+    #     return None, None, None
+
     final_data = []
     max_height = 0
     min_height = float('inf')
@@ -136,20 +171,21 @@ def extract_bilingual_lines(pages: List[Page],
             data.append(clusters)
 
         if main_page_parsed:
-            _, _, _, rows = group_vertically(data, rects, max_height=max_height,
-                                             min_height=min_height,
-                                             main_page_parsed=main_page_parsed)
+            _, _, _, _, rows = group_vertically(data, rects, max_height=max_height,
+                                                min_height=min_height,
+                                                main_page_parsed=main_page_parsed)
         else:
-            title, top_columns, value_columns, rows = group_vertically(data, rects, max_height=max_height,
-                                                                       min_height=min_height,
-                                                                       main_page_parsed=main_page_parsed)
+            title, descriptions, column_barriers, value_columns, rows = group_vertically(data, rects,
+                                                                                         max_height=max_height,
+                                                                                         min_height=min_height,
+                                                                                         main_page_parsed=main_page_parsed)
 
-        final_result = format_final_result(top_columns=top_columns, value_columns=value_columns, rows=rows)
+        final_result = format_final_result(column_barriers=column_barriers, value_columns=value_columns, rows=rows)
         main_page_parsed = True
         final_data += final_result
 
-    df = format_into_df(final_data, top_columns, value_columns)
-    return df, title
+    df = format_into_df(final_data, desc_columns=column_barriers, value_columns=value_columns)
+    return df, title, descriptions
 
 
 def make_cluster(words, height):
@@ -183,24 +219,24 @@ def group_vertically(clusters,
     row_rects = sorted(row_rects, key=lambda r: r['top'])
     col_rects = [rect for rect in rects if rect['height'] > 10]
     title = ''
-    top_columns = []
+    descriptions = []
     value_columns = []
     index = 0
 
     if not main_page_parsed:
         for index, cluster in enumerate(clusters):
-            x = 0
             if len(cluster) == 1 and cluster[0]['height'] == max_height:
                 title += cluster[0]['text']
             elif cluster[0]['height'] == max_height:
-                top_columns, index = manage_top_columns(clusters, index, max_height)
+                descriptions, index = manage_descriptions(clusters, index, max_height)
             elif cluster[0]['height'] == min_height:
                 value_columns, index = manage_value_columns(clusters, index, min_height, col_rects)
                 break
 
     clusters = clusters[index:]
+    column_barriers = get_description_column_barriers(clusters, value_columns)
     rows = retrieve_data_rows(clusters, row_rects)
-    return title, top_columns, value_columns, rows
+    return title, descriptions, column_barriers, value_columns, rows
 
 
 def retrieve_data_rows(clusters, rects):
@@ -222,6 +258,23 @@ def retrieve_data_rows(clusters, rects):
             rows.append(row_clusters)
 
     return rows
+
+
+def manage_descriptions(clusters, starting_index: int, max_height: int) -> List[str]:
+    descriptions = []
+    for i in range(starting_index, len(clusters)):
+        cluster = clusters[i]
+
+        if cluster[0]['height'] != max_height:
+            break
+
+        for index, sentence in enumerate(cluster):
+            if len(descriptions) != len(cluster):
+                descriptions.append(sentence['text'])
+            else:
+                descriptions[index] += sentence['text']
+
+    return descriptions, i
 
 
 def manage_value_columns(clusters, starting_index: int, min_height: int, col_rects, tolerance: int = 3):
@@ -253,48 +306,96 @@ def manage_value_columns(clusters, starting_index: int, min_height: int, col_rec
     return [values[k] for k in sorted(values)], index
 
 
-def manage_top_columns(clusters, starting_index: int, max_height: int):
-    top_columns = []
-    for i in range(starting_index, len(clusters)):
-        cluster = clusters[i]
+def get_description_column_barriers(
+        clusters,
+        value_columns,
+        merge_tolerance: float = 5.0
+):
+    """
+    Identify valid description column barriers based on both spatial layout
+    and content presence across rows.
 
-        if cluster[0]['height'] != max_height:
-            break
+    A barrier is kept if:
+      - It has content in every row, OR
+      - It has content in the first row only.
 
-        for index, col in enumerate(cluster):
-            if len(top_columns) != len(cluster):
-                top_columns.append({
-                    'text': col['text'],
-                    'x': col['x'],
-                    'min_x': col['min_x'],
-                    'max_x': col['max_x']
-                })
-            else:
-                top_columns[index]['text'] += f' {col['text']}'
-                top_columns[index]['min_x'] = min(top_columns[index]['min_x'], col['min_x'])
-                top_columns[index]['max_x'] = max(top_columns[index]['max_x'], col['max_x'])
+    Args:
+        clusters (List[List[dict]]): List of line clusters; each cluster represents one row.
+        value_columns (List[dict]): List of value column boundaries.
+        merge_tolerance (float): Distance threshold to merge nearby barriers.
 
-    return top_columns, i
+    Returns:
+        List[dict]: Filtered barriers with 'barrier' (min_x, max_x) and 'col_name'.
+    """
+
+    def is_inside_value_col(center_x: float) -> bool:
+        """Return True if a point lies within any value column range."""
+        return any(v['min_x'] <= center_x <= v['max_x'] for v in value_columns)
+
+    candidates = []
+    for cluster in clusters:
+        for sentence in cluster:
+            center_x = sentence['x']
+            if not is_inside_value_col(center_x):
+                candidates.append((sentence['min_x'], sentence['max_x']))
+
+    if not candidates:
+        return []
+
+    candidates.sort(key=lambda b: b[0])
+    merged = []
+    current_min, current_max = candidates[0]
+
+    for min_x, max_x in candidates[1:]:
+        if min_x - current_max <= merge_tolerance:
+            current_max = max(current_max, max_x)
+        else:
+            merged.append((current_min, current_max))
+            current_min, current_max = min_x, max_x
+    merged.append((current_min, current_max))
+
+    valid_barriers = []
+    total_rows = len(clusters)
+
+    for barrier_idx, (bar_min, bar_max) in enumerate(merged):
+        rows_with_content = 0
+        for cluster_idx, cluster in enumerate(clusters):
+            for sentence in cluster:
+                center_x = sentence['x']
+                if bar_min <= center_x <= bar_max:
+                    rows_with_content += 1
+                    break
+
+        filled_everywhere = rows_with_content == total_rows
+        filled_first_row = any(
+            bar_min <= s['x'] <= bar_max for s in clusters[0]
+        )
+
+        if filled_everywhere or filled_first_row:
+            valid_barriers.append({
+                'barrier': (bar_min, bar_max),
+                'col_name': f'desc_col_{len(valid_barriers)}',
+                'fill_ratio': rows_with_content / total_rows
+            })
+
+    return valid_barriers
 
 
-def format_final_result(top_columns, value_columns, rows,
+def format_final_result(column_barriers, value_columns, rows,
                         tolerance_for_value=10, tolerance_for_top=3):
     results = []
 
-    all_columns = []
+    value_cols, desc_cols = [], []
     for i, col in enumerate(value_columns):
-        all_columns.append({"index": i, "type": "value", **col})
-    for i, col in enumerate(top_columns):
-        all_columns.append({"index": i, "type": "top", **col})
+        value_cols.append({"index": i, "type": "value", **col})
+    for i, col in enumerate(column_barriers):
+        desc_cols.append({"index": i, "type": "top", **col})
 
     for cluster in rows:
         row_data = {
             "values": {i: "" for i in range(len(value_columns))},
-            "top": {i: "" for i in range(len(top_columns))}
+            "descriptions": {i: "" for i in range(len(column_barriers))}
         }
-
-        if len(results) == 3:
-            lm = 1
 
         sorted_cluster = sorted(cluster, key=lambda w: (round(w["top"], 1), w["min_x"]))
 
@@ -302,16 +403,23 @@ def format_final_result(top_columns, value_columns, rows,
             x_center = (word["min_x"] + word["max_x"]) / 2
             matched_col = None
 
-            for col in all_columns:
-                tolerance = tolerance_for_top if col['type'] == 'top' else tolerance_for_value
+            for col in value_cols:
+                tolerance = tolerance_for_top if col['type'] == 'descriptions' else tolerance_for_value
                 if col["min_x"] - tolerance <= x_center <= col["max_x"] + tolerance:
+                    matched_col = col
+                    break
+
+            for col in desc_cols:
+                tolerance = tolerance_for_top if col['type'] == 'descriptions' else tolerance_for_value
+                barrier = col['barrier']
+                if barrier[0] - tolerance <= x_center <= barrier[1] + tolerance:
                     matched_col = col
                     break
 
             if matched_col:
                 if matched_col["type"] == "top":
-                    row_data["top"][matched_col["index"]] = (
-                            row_data["top"][matched_col["index"]] + " " + word["text"]
+                    row_data["descriptions"][matched_col["index"]] = (
+                            row_data["descriptions"][matched_col["index"]] + " " + word["text"]
                     ).strip()
                 else:
                     row_data["values"][matched_col["index"]] = (
@@ -323,14 +431,14 @@ def format_final_result(top_columns, value_columns, rows,
     return results
 
 
-def format_into_df(parsed_rows, top_columns, value_columns) -> pd.DataFrame:
+def format_into_df(parsed_rows, desc_columns, value_columns) -> pd.DataFrame:
     table_rows = []
 
     for row in parsed_rows:
         flat_row = {}
 
-        for i, col in enumerate(top_columns):
-            flat_row[col["text"] + '_desc'] = row["top"].get(i, "")
+        for i, col in enumerate(desc_columns):
+            flat_row[col["col_name"]] = row["descriptions"].get(i, "")
 
         for i, col in enumerate(value_columns):
             flat_row[col["text"] + '_value'] = row["values"].get(i, "")
