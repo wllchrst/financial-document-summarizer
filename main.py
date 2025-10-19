@@ -1,7 +1,8 @@
-﻿def main():
-    from pipelines.extract_pipeline import read_pdf
+﻿from api import run_api
 
-    result = read_pdf(filepath='data/FinancialStatement-2024-Tahunan-EKAD.pdf')
+
+def main():
+    run_api()
 
 
 if __name__ == "__main__":
