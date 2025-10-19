@@ -1,7 +1,6 @@
 ﻿import os
 import pdfplumber
 import pandas as pd
-import numpy as np
 
 from typing import *
 from helpers import WordHelper
@@ -30,10 +29,6 @@ def get_title_codes(folder_name: str = 'data/inlineXBRL') -> List[str]:
     return codes
 
 
-import os
-import pdfplumber
-
-
 def extract_pdf(filepath: str):
     os.makedirs(PROCESSED_FOLDER_PATH, exist_ok=True)
     codes = get_title_codes()
@@ -59,16 +54,14 @@ def extract_pdf(filepath: str):
             code_found = next((code for code in codes if code in content), None)
 
             if code_found:
-                if current_code:  # Save previous block
+                if current_code:
                     save_and_store(pages, page_indices, current_code)
-                # Start new block
                 pages, page_indices = [page], [index]
                 current_code = code_found
             elif current_code:
                 pages.append(page)
                 page_indices.append(index)
 
-        # Process last remaining block
         if current_code and current_code not in extractions:
             save_and_store(pages, page_indices, current_code)
 
