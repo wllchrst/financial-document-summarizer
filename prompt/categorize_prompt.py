@@ -1,6 +1,4 @@
-﻿from pandas import describe_option
-
-from llm.gemini_llm import GeminiLLM
+﻿from llm.gemini_llm import GeminiLLM
 from llm.ollama_llm import OllamaLLM
 from typing import *
 
@@ -102,8 +100,12 @@ class CategorizePrompt:
         # FALLBACK IF THE LLM IS NOT SUCCESSFUL IN DETERMINING THE DETAIL LABELS
         return ''
 
-    def classify(self, descriptions: List[str], title: str):
-        desc_formatted = "\n".join([f'- {d}' for d in descriptions])
+    def classify(self, descriptions: List[str], title: str, header_descriptions: List[str]):
+        desc_formatted = 'Header Descriptions:\n'
+        desc_formatted += "\n".join([f'- {d}' for d in header_descriptions])
+        desc_formatted += '\n\nDetailed Descriptions:\n'
+        desc_formatted += "\n".join([f'- {d}' for d in descriptions])
+
         initial_analysis, initial_prompt = self.get_initial_analysis(
             desc_formatted=desc_formatted,
             title=title
