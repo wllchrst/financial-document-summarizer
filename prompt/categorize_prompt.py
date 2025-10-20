@@ -100,11 +100,16 @@ class CategorizePrompt:
         # FALLBACK IF THE LLM IS NOT SUCCESSFUL IN DETERMINING THE DETAIL LABELS
         return ''
 
-    def classify(self, descriptions: List[str], title: str, header_descriptions: List[str]):
-        desc_formatted = 'Header Descriptions:\n'
-        desc_formatted += "\n".join([f'- {d}' for d in header_descriptions])
-        desc_formatted += '\n\nDetailed Descriptions:\n'
-        desc_formatted += "\n".join([f'- {d}' for d in descriptions])
+    def format_descriptions(self, descriptions: List[str]):
+        formatted = 'Descriptions below are ordered from the most general description to the more detailed description. ' \
+                    + 'The descriptions should be used to help the analysis:\n'
+
+        desc_text = '\n'.join([f'- {desc}' for desc in descriptions])
+
+        return formatted + desc_text
+
+    def classify(self, title: str, descriptions: str):
+        desc_formatted = self.format_descriptions(descriptions)
 
         initial_analysis, initial_prompt = self.get_initial_analysis(
             desc_formatted=desc_formatted,
@@ -116,10 +121,10 @@ class CategorizePrompt:
             initial_prompt=initial_prompt
         )
 
-        detail_categorization = self.get_detail_categorization(
+        detailed_label = self.get_detail_categorization(
             general_label=general_label,
             analysis=initial_analysis,
             initial_prompt=initial_prompt
         )
 
-        return general_label, detail_categorization
+        return general_label, detailed_label
