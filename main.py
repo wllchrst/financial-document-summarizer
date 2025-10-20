@@ -1,6 +1,6 @@
 ﻿from api import run_api
 from pipelines.extraction_pipeline import extract_pdf
-from pipelines.categorization_pipeline import categorize_data
+from pipelines.categorization_pipeline import categorize_code
 from helpers.argument_helper import ArgumentHelper
 
 API_ACTION = 'api'
@@ -19,7 +19,7 @@ def main():
     if args.action == EXTRACT_ACTION:
         extract_pdf(FINANCIAL_STATEMENT_PATH)
     elif args.action == CATEGORIZE_ACTION:
-        categorize_data(False, filepath=None, code=code)
+        categorize_code(False, filepath=None, code=code, testing=True)
     elif args.action == SUMMARIZE_ACTION:
         pass
 

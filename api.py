@@ -3,7 +3,7 @@ import json
 
 from fastapi import FastAPI
 from pydantic import BaseModel
-from pipelines.categorization_pipeline import categorize_data
+from pipelines.categorization_pipeline import categorize_code
 from pipelines.extraction_pipeline import extract_pdf, get_title_codes
 
 
@@ -30,7 +30,7 @@ class API:
 
         @self.app.post("/categorize")
         def categorize_code(categorize_request: CategorizeRequest):
-            df = categorize_data(use_gemini=False,
+            df = categorize_code(use_gemini=False,
                                  filepath=None,
                                  code=categorize_request.code_of_account)
 
