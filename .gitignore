@@ -208,3 +208,5 @@ __marimo__/
 .idea
 .vscode
 .DS_Store
+data/processed
+data/processed_json
