@@ -1,0 +1,1087 @@
+{
+  "title": "[1210000] Statement of financial position presented using current andnon-current - General Industry",
+  "content_code": {
+    "filtered": "1696000",
+    "raw": "1696000",
+    "description": ""
+  },
+  "tables": [
+    {
+      "data": {
+        "Laporan posisi keuangan": {
+          "31 December 2024": "",
+          "31 December 2023": "",
+          "Aset": {
+            "31 December 2024": "",
+            "31 December 2023": "",
+            "Aset lancar": {
+              "31 December 2024": "",
+              "31 December 2023": "",
+              "Kas dan setara kas": {
+                "31 December 2024": {
+                  "value": "89,822,670,664",
+                  "general_label": "Assets Current",
+                  "detailed_label": "Cash"
+                },
+                "31 December 2023": {
+                  "value": "126,639,835,328",
+                  "general_label": "Others",
+                  "detailed_label": ""
+                }
+              },
+              "Wesel tagih": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Investasi jangka pendek": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Dana yang dibatasi penggunaannya lancar": {
+                "31 December 2024": "8,108,197,959",
+                "31 December 2023": "42,369,138,649"
+              },
+              "Aset keuangan lancar": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Aset keuangan lancar yang diukur pada nilai wajar melalui laba rugi": {
+                  "31 December 2024": "77,549,504,999",
+                  "31 December 2023": ""
+                },
+                "Aset keuangan lancar nilai wajar melalui pendapatan komprehensif lainnya": {
+                  "31 December 2024": "268,978,504,000",
+                  "31 December 2023": "313,690,505,999"
+                },
+                "Aset keuangan biaya perolehan diamortisasi lancar": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Aset keuangan lancar lainnya": {
+                  "31 December 2024": "41,607,602,400",
+                  "31 December 2023": ""
+                }
+              },
+              "Aset keuangan derivatif lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Piutang usaha": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Piutang usaha pihak ketiga": {
+                  "31 December 2024": "71,776,497,049",
+                  "31 December 2023": "65,506,906,292"
+                },
+                "Piutang usaha pihak berelasi": {
+                  "31 December 2024": "477,959,208",
+                  "31 December 2023": "319,390,818"
+                }
+              },
+              "Piutang sewa pembiayaan lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Piutang retensi": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Piutang retensi pihak ketiga": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Piutang retensi pihak berelasi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                }
+              },
+              "Tagihan bruto pemberi kerja": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Tagihan bruto pemberi kerja pihak ketiga": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Tagihan bruto pemberi kerja pihak berelasi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                }
+              },
+              "Piutang subsidi": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Piutang nasabah": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Piutang nasabah lancar pihak ketiga": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Piutang nasabah lancar pihak berelasi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                }
+              },
+              "Piutang margin": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Piutang dari lembaga kliring dan penjaminan": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Piutang premi dan reasuransi": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Piutang dividen dan bunga": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Piutang lainnya": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Piutang lainnya pihak ketiga": {
+                  "31 December 2024": "2,202,810,556",
+                  "31 December 2023": "3,523,437,008"
+                },
+                "Piutang lainnya pihak berelasi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                }
+              },
+              "Persediaan lancar": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Persediaan hewan ternak lancar": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Aset real estat lancar": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Persediaan lancar": {
+                  "31 December 2024": "187,241,701,660",
+                  "31 December 2023": "157,485,132,716"
+                }
+              },
+              "Aset biologis lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Biaya dibayar dimuka lancar": {
+                "31 December 2024": "5,541,930,373",
+                "31 December 2023": "4,797,809,152"
+              },
+              "Jaminan lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Uang muka lancar": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Uang muka lancar atas investasi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Uang muka lancar atas pembelian aset tetap": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Uang muka lancar lainnya": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                }
+              },
+              "Pajak dibayar dimuka lancar": {
+                "31 December 2024": "88,244,510",
+                "31 December 2023": "0"
+              },
+              "Klaim atas pengembalian pajak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Biaya pengupasan tanah yang ditangguhkan lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Biaya mobilisasi yang ditangguhkan lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Aset pengampunan pajak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Aset non-keuangan lancar lainnya": {
+                "31 December 2024": "828,158,337",
+                "31 December 2023": "718,048,527"
+              },
+              "Aset tidak lancar atau kelompok lepasan diklasifikasikan sebagai dimiliki untuk dijual": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Aset tidak lancar atau kelompok lepasan diklasifikasikan": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Jumlah aset lancar": {
+                "31 December 2024": "754,223,781,715",
+                "31 December 2023": "715,050,204,489"
+              }
+            },
+            "Aset tidak lancar": {
+              "31 December 2024": "",
+              "31 December 2023": "",
+              "Piutang sewa pembiayaan tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Dana yang dibatasi penggunaannya tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Dana cadangan perawatan pesawat": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Piutang dari pihak berelasi": {
+                "31 December 2024": "211,564,080",
+                "31 December 2023": "195,520,455"
+              },
+              "Piutang dari pemegang saham": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Piutang nasabah tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Piutang nasabah tidak lancar pihak ketiga": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Piutang nasabah tidak lancar pihak berelasi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                }
+              },
+              "Piutang tidak lancar lainnya": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Piutang tidak lancar lainnya pihak ketiga": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Piutang tidak lancar lainnya pihak berelasi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                }
+              },
+              "Investasi yang dicatat dengan menggunakan metode ekuitas": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Investasi pada ventura bersama dan entitas asosiasi": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Investasi pada entitas ventura bersama": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Investasi pada entitas asosiasi": {
+                  "31 December 2024": "789,200,996",
+                  "31 December 2023": "774,561,067"
+                }
+              },
+              "Jaminan tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Uang muka tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Uang muka tidak lancar atas investasi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Uang muka tidak lancar atas pembelian aset tetap": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Uang muka tidak lancar lainnya": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                }
+              },
+              "Aset keuangan tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Aset keuangan tidak lancar yang": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Aset keuangan tidak lancar nilai wajar melalui pendapatan komprehensif lainnya": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Aset keuangan tidak lancar biaya perolehan diamortisasi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Aset keuangan tidak lancar lainnya": {
+                  "31 December 2024": "48,891,236,291",
+                  "31 December 2023": "43,109,488,162"
+                }
+              },
+              "Aset keuangan derivatif tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Biaya dibayar dimuka tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Pajak dibayar dimuka tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Aset pajak tangguhan": {
+                "31 December 2024": "0",
+                "31 December 2023": "0"
+              },
+              "Persediaan tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Persediaan hewan ternak tidak lancar": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Aset real estat tidak lancar": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Persediaan tidak lancar lainnya": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                }
+              },
+              "Hewan ternak produksi": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Hutan tanaman industri": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Hutan tanaman industri menghasilkan": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Hutan tanaman industri belum menghasilkan": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                }
+              },
+              "Tanaman perkebunan": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Tanaman perkebunan menghasilkan": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Tanaman perkebunan belum menghasilkan": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                }
+              },
+              "Aset biologis tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Perkebunan plasma": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Aset reasuransi": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Properti investasi": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Tanah Belum Dikembangkan": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Aset tetap": {
+                "31 December 2024": "466,087,934,253",
+                "31 December 2023": "462,883,735,481"
+              },
+              "Aset hak guna": {
+                "31 December 2024": "16,926,992,392",
+                "31 December 2023": "17,121,108,112"
+              },
+              "Aset ijarah": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Agunan yang diambil": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Aset minyak dan gas bumi": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Aset eksplorasi dan evaluasi": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Hak konsesi jalan tol": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Properti pertambangan": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Biaya pengupasan tanah yang ditangguhkan tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Biaya mobilisasi yang ditangguhkan tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Beban tangguhan": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Beban tangguhan hak atas tanah dan bangunan": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Beban tangguhan atas biaya eksplorasi dan pengembangan": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Beban tangguhan atas biaya pengelolaan hak pengusahaan hutan": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Beban tangguhan atas biaya pengelolaan dan reklamasi lingkungan hidup": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Beban tangguhan lainnya": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                }
+              },
+              "Klaim atas pengembalian pajak tidak lancar": {
+                "31 December 2024": "5,755,647,828",
+                "31 December 2023": "6,931,088,073"
+              },
+              "Aset imbalan pasca kerja": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Goodwill": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Aset takberwujud selain goodwill": {
+                "31 December 2024": "78,106,000",
+                "31 December 2023": "131,927,900"
+              },
+              "Aset pengampunan pajak tidak lancar": {
+                "31 December 2024": "",
+                "31 December 2023": ""
+              },
+              "Aset tidak lancar non-keuangan lainnya": {
+                "31 December 2024": "1,818,871,431",
+                "31 December 2023": "1,068,060,967"
+              },
+              "Jumlah aset tidak lancar": {
+                "31 December 2024": "540,559,553,271",
+                "31 December 2023": "532,215,490,217"
+              }
+            },
+            "Jumlah aset": {
+              "31 December 2024": "1,294,783,334,986",
+              "31 December 2023": "1,247,265,694,706"
+            }
+          },
+          "Liabilitas dan ekuitas": {
+            "31 December 2024": "",
+            "31 December 2023": "",
+            "Liabilitas": {
+              "31 December 2024": "",
+              "31 December 2023": "",
+              "Liabilitas jangka pendek": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Utang bank jangka pendek": {
+                  "31 December 2024": "9,711,876,216",
+                  "31 December 2023": "4,651,381,491"
+                },
+                "Utang trust receipts": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Utang usaha": {
+                  "31 December 2024": "",
+                  "31 December 2023": "",
+                  "Utang usaha pihak berelasi": {
+                    "31 December 2024": "1,851,071,582",
+                    "31 December 2023": "1,712,744,491"
+                  }
+                },
+                "Utang lainnya": {
+                  "31 December 2024": "",
+                  "31 December 2023": "",
+                  "Utang lainnya pihak ketiga": {
+                    "31 December 2024": "5,447,887,081",
+                    "31 December 2023": "2,083,986,838"
+                  },
+                  "Utang lainnya pihak berelasi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  }
+                },
+                "Uang muka pelanggan jangka pendek": {
+                  "31 December 2024": "",
+                  "31 December 2023": "",
+                  "Uang muka pelanggan jangka pendek pihak ketiga": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Uang muka pelanggan jangka pendek pihak berelasi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  }
+                },
+                "Utang dividen": {
+                  "31 December 2024": "1,775,013,823",
+                  "31 December 2023": "1,660,792,578"
+                },
+                "Liabilitas keuangan jangka pendek lainnya": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Beban akrual jangka pendek": {
+                  "31 December 2024": "1,895,025,509",
+                  "31 December 2023": "1,617,116,170"
+                },
+                "Liabilitas imbalan pasca kerja jangka pendek": {
+                  "31 December 2024": "3,426,836,032",
+                  "31 December 2023": "3,253,188,243"
+                },
+                "Utang pajak": {
+                  "31 December 2024": "3,965,908,053",
+                  "31 December 2023": "5,988,872,388"
+                },
+                "Utang cukai": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Utang proyek": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Utang kepada lembaga kliring dan penjaminan": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Utang nasabah": {
+                  "31 December 2024": "",
+                  "31 December 2023": "",
+                  "Utang nasabah pihak ketiga": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Utang nasabah pihak berelasi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  }
+                },
+                "Utang koasuransi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Utang reasuransi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Liabilitas anjak piutang": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Uang jaminan jangka pendek": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Pendapatan diterima dimuka jangka pendek": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Liabilitas bruto kepada pemberi kerja": {
+                  "31 December 2024": "",
+                  "31 December 2023": "",
+                  "Liabilitas bruto kepada pemberi kerja pihak ketiga": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  }
+                },
+                "Pendapatan ditangguhkan jangka pendek": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Provisi jangka pendek": {
+                  "31 December 2024": "",
+                  "31 December 2023": "",
+                  "Provisi jangka pendek pelapisan jalan tol": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Provisi jangka pendek biaya pengembalian dan pemeliharaan pesawat": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Provisi jangka pendek pembangunan prasarana, fasilitas umum, dan sosial": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Provisi jangka pendek biaya pembongkaran aset tetap": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Provisi jangka pendek restorasi dan rehabilitasi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Provisi jangka pendek lainnya": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  }
+                },
+                "Liabilitas pembayaran berbasis saham": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Kontrak liabilitas jangka pendek": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Liabilitas yang secara langsung berhubungan dengan aset tidak lancar atau kelompok lepasan yang diklasifikasikan sebagai dimiliki untuk dijual atau dimiliki untuk didistribusikan kepada pemilik": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun": {
+                  "31 December 2024": "",
+                  "31 December 2023": "",
+                  "Liabilitas jangka panjang yang jatuh tempo": {
+                    "31 December 2024": "0",
+                    "31 December 2023": "0"
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas utang keuangan keuangan non bank": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas pinjaman beragunan": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas pinjaman tanpa agunan": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas penerusan pinjaman": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas pinjaman dari pemerintah republik Indonesia": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas pinjaman subordinasi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas liabilitas kerja sama operasi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas liabilitas pembebasan tanah": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas utang pembiayaan konsumen": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas liabilitas sewa pembiayaan": {
+                    "31 December 2024": "880,517,116",
+                    "31 December 2023": "761,152,776"
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas utang listrik swasta": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas utang retensi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas wesel bayar": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas surat utang jangka menengah": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas utang obligasi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas sukuk": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang jatuh tempo dalam satu tahun atas obligasi subordinasi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang yang": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  }
+                },
+                "Utang pihak berelasi jangka pendek": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Utang pemegang saham jangka pendek": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Liabilitas keuangan derivatif jangka pendek": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Liabilitas pengampunan pajak lancar": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Liabilitas non-keuangan jangka pendek lainnya": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Jumlah liabilitas jangka pendek": {
+                  "31 December 2024": "50,181,225,431",
+                  "31 December 2023": "50,331,125,991"
+                }
+              },
+              "Liabilitas jangka panjang": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Liabilitas keuangan derivatif jangka panjang": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Liabilitas pajak tangguhan": {
+                  "31 December 2024": "9,112,611,972",
+                  "31 December 2023": "6,736,147,795"
+                },
+                "Utang pihak berelasi jangka panjang": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Utang pemegang saham jangka panjang": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Kontrak liabilitas jangka panjang": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Liabilitas jangka panjang setelah dikurangi bagian yang jatuh tempo dalam satu tahun": {
+                  "31 December 2024": "",
+                  "31 December 2023": "",
+                  "Liabilitas jangka panjang atas utang bank": {
+                    "31 December 2024": "0",
+                    "31 December 2023": "0"
+                  },
+                  "Utang lembaga keuangan non-bank": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas penerusan pinjaman": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas pinjaman beragunan": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas pinjaman tanpa agunan": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas pinjaman subordinasi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas liabilitas kerja sama operasi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas liabilitas pembebasan tanah": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas utang pembiayaan konsumen": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas liabilitas sewa pembiayaan": {
+                    "31 December 2024": "16,246,991,483",
+                    "31 December 2023": "15,828,670,933"
+                  },
+                  "Liabilitas jangka panjang atas utang listrik swasta": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas utang retensi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas wesel bayar": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas surat utang jangka menengah": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas utang obligasi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas sukuk": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas obligasi subordinasi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Liabilitas jangka panjang atas pinjaman lainnya": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  }
+                },
+                "Obligasi konversi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Pendapatan diterima dimuka jangka panjang": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Uang jaminan": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Uang muka pelanggan jangka panjang": {
+                  "31 December 2024": "",
+                  "31 December 2023": "",
+                  "Uang muka pelanggan jangka panjang pihak ketiga": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Uang muka pelanggan jangka panjang pihak berelasi": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  }
+                },
+                "Pendapatan ditangguhkan jangka panjang": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Liabilitas kontrak asuransi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Provisi jangka panjang": {
+                  "31 December 2024": "",
+                  "31 December 2023": "",
+                  "Provisi pelapisan jalan tol jangka panjang": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Provisi biaya pengembalian dan pemeliharaan pesawat jangka panjang": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Provisi pembangunan prasarana, fasilitas umum, dan sosial jangka panjang": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Provisi biaya pembongkaran aset tetap jangka panjang": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Provisi restorasi dan rehabilitasi jangka panjang": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  },
+                  "Provisi jangka panjang lainnya": {
+                    "31 December 2024": "",
+                    "31 December 2023": ""
+                  }
+                },
+                "Biaya pengupasan tanah yang masih harus dibayar": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Liabilitas kepada pemegang polis": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Kewajiban imbalan pasca kerja jangka panjang": {
+                  "31 December 2024": "27,522,090,446",
+                  "31 December 2023": "26,608,730,879"
+                },
+                "Liabilitas pengampunan pajak tidak lancar": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Liabilitas keuangan jangka panjang lainnya": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Liabilitas non-keuangan jangka panjang": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Jumlah liabilitas jangka panjang": {
+                  "31 December 2024": "52,881,693,901",
+                  "31 December 2023": "49,173,549,607"
+                }
+              },
+              "Jumlah liabilitas": {
+                "31 December 2024": "103,062,919,332",
+                "31 December 2023": "99,504,675,598"
+              }
+            },
+            "Ekuitas": {
+              "31 December 2024": "",
+              "31 December 2023": "",
+              "Ekuitas yang diatribusikan kepada pemilik entitas induk": {
+                "31 December 2024": "",
+                "31 December 2023": "",
+                "Saham biasa": {
+                  "31 December 2024": "34,938,750,000",
+                  "31 December 2023": "34,938,750,000"
+                },
+                "Saham preferen": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Tambahan modal disetor": {
+                  "31 December 2024": "138,490,000",
+                  "31 December 2023": "138,490,000"
+                },
+                "Saham treasuri": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Uang muka setoran modal": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Opsi saham": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Cadangan revaluasi": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Cadangan selisih kurs penjabaran": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Cadangan perubahan nilai wajar aset keuangan nilai wajar melalui pendapatan komprehensif lainnya": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Cadangan keuntungan (kerugian) investasi pada instrumen ekuitas": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Cadangan pembayaran berbasis saham": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Cadangan lindung nilai arus kas": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Cadangan pengukuran kembali program imbalan pasti": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Cadangan lainnya": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Selisih Transaksi Perubahan Ekuitas Entitas Anak/Asosiasi": {
+                  "31 December 2024": "( 3,528,637,968 )",
+                  "31 December 2023": "( 3,528,637,968 )"
+                },
+                "Komponen ekuitas lainnya": {
+                  "31 December 2024": "353,254,229,579",
+                  "31 December 2023": "342,952,866,696"
+                },
+                "Saldo laba (akumulasi kerugian)": {
+                  "31 December 2024": "",
+                  "31 December 2023": "",
+                  "Saldo laba yang telah ditentukan penggunaannya": {
+                    "31 December 2024": "7,200,000,000",
+                    "31 December 2023": "7,200,000,000"
+                  },
+                  "Saldo laba yang belum ditentukan penggunaannya": {
+                    "31 December 2024": "767,071,991,327",
+                    "31 December 2023": "732,532,760,819"
+                  }
+                },
+                "Proforma ekuitas": {
+                  "31 December 2024": "",
+                  "31 December 2023": ""
+                },
+                "Kepentingan non-pengendali": {
+                  "31 December 2024": "32,645,592,716",
+                  "31 December 2023": "33,526,789,561"
+                },
+                "Jumlah ekuitas": {
+                  "31 December 2024": "1,191,720,415,654",
+                  "31 December 2023": "1,147,761,019,108"
+                }
+              },
+              "Jumlah liabilitas dan ekuitas": {
+                "31 December 2024": "1,294,783,334,986",
+                "31 December 2023": "1,247,265,694,706"
+              }
+            }
+          }
+        }
+      },
+      "descriptions": [
+        "Laporan posisi keuangan",
+        "Statement of financial position"
+      ],
+      "nested_result": true
+    }
+  ]
+}
