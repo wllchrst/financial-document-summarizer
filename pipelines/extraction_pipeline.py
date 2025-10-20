@@ -9,10 +9,9 @@ from helpers import WordHelper
 from pdfplumber.page import Page
 
 PROCESSED_FOLDER_PATH = 'data/processed'
-PROCESSED_FOLDER_PATH_JSON = 'data/processed_json'
 
 
-def get_title_codes(folder_name: str = 'data/inlineXBRL') -> List[str]:
+def get_title_codes(folder_name: str = 'data/inlineXBRL') -> List[dict]:
     """
     Get every title code from the html (the html is retrieved from the website IDX the folder name is called inlineXBRL)
 
@@ -43,38 +42,33 @@ def get_title_codes(folder_name: str = 'data/inlineXBRL') -> List[str]:
 
 def extract_pdf(filepath: str):
     os.makedirs(PROCESSED_FOLDER_PATH, exist_ok=True)
-    os.makedirs(PROCESSED_FOLDER_PATH_JSON, exist_ok=True)
     codes = get_title_codes()
     extractions = {}
 
     def save_and_store(content_code: str):
-        if '1000000' not in content_code:
-            return
-
-        dataframe, title, descriptions = extract_all_data(
+        title, tables = extract_all_data(
             pages=pages,
             y_threshold=3,
         )
         extraction_result = None
 
-        if dataframe is not None:
-            match = re.search(r'\[(.*?)\]', title)
-            c = match.group(1)
-            py_information = '' if 'prior year' not in title.lower() else '_PriorYear'
-            filename = c + py_information
+        if tables is None:
+            extractions[content_code] = extraction_result
+            return
 
-            dataframe.to_csv(f"{PROCESSED_FOLDER_PATH}/{filename}.csv", index=False)
-            data_records = dataframe.to_dict(orient="records")
+        match = re.search(r'\[(.*?)\]', title)
+        c = match.group(1)
+        py_information = '' if 'prior year' not in title.lower() else '_PriorYear'
+        filename = c + py_information
 
-            extraction_result = {
-                "code": content_code,
-                "title": title,
-                "descriptions": descriptions,
-                "data": data_records
-            }
+        extraction_result = {
+            'title': title,
+            'content_code': code,
+            'tables': tables
+        }
 
-            with open(f"{PROCESSED_FOLDER_PATH_JSON}/{filename}.json", "w", encoding="utf-8") as f:
-                json.dump(extraction_result, f, indent=2, ensure_ascii=False)
+        with open(f"{PROCESSED_FOLDER_PATH}/{filename}.json", "w", encoding="utf-8") as f:
+            json.dump(extraction_result, f, indent=2, ensure_ascii=False)
 
         extractions[content_code] = extraction_result
 
@@ -108,11 +102,13 @@ def extract_pdf(filepath: str):
 
 def extract_all_data(pages: List[Page],
                      y_threshold=3,
-                     gap_threshold=4) -> Tuple[pd.DataFrame, str, List[str]]:
-    final_data = []
+                     big_threshold=4,
+                     medium_threshold=3,
+                     small_threshold=2.5):
     max_height = 0
     min_height = float('inf')
-    main_page_parsed = False
+    all_lines = []
+    rects_dict = {}
 
     for page_idx, page in enumerate(pages, start=1):
         rects = page.rects
@@ -132,24 +128,134 @@ def extract_all_data(pages: List[Page],
             else:
                 lines[y] = [w]
 
-        data, max_height, min_height = create_clusters(lines, gap_threshold, max_height, min_height)
+        data, max_height, min_height = create_clusters(lines, big_threshold, medium_threshold, small_threshold,
+                                                       max_height, min_height,
+                                                       page_idx)
+        all_lines += data
+        rects_dict[page_idx] = rects
 
-        if main_page_parsed:
-            _, _, _, _, rows = group_vertically(data, rects, max_height, min_height, main_page_parsed)
+    sections = split_line_per_section(all_lines=all_lines,
+                                      max_height=max_height)
+
+    table_lines = split_section_per_table(sections, max_height)
+    title = None
+
+    if len(table_lines) > 0:
+        title = get_title(table_lines[0], max_height)
+
+    tables = []
+    for lines in table_lines:
+        if title is not None:
+            descriptions, column_barriers, value_columns, rows = group_vertically(lines, rects_dict,
+                                                                                  max_height, min_height)
         else:
-            title, descriptions, column_barriers, value_columns, rows = group_vertically(
-                data, rects, max_height, min_height, main_page_parsed
+            descriptions, column_barriers, value_columns, rows = group_vertically(
+                lines, rects_dict, max_height, min_height
             )
 
-        final_result = format_final_result(column_barriers, value_columns, rows)
+        is_nested = check_table_nested(column_barriers, rows)
+
+        try:
+            if is_nested:
+                final_result = nested_format_final_result(column_barriers, value_columns, rows)
+            else:
+                final_result = format_final_result(column_barriers, value_columns, rows)
+        except ValueError as e:
+            print(f'Error formatting final result for title: {title}')
+            return None, None
+
+        tables.append({
+            'data': final_result,
+            'descriptions': descriptions,
+            'nested_result': is_nested
+        })
         main_page_parsed = True
-        final_data += final_result
 
-    df = format_into_df(final_data, desc_columns=column_barriers, value_columns=value_columns)
-    return df, title, descriptions
+    return title, tables
 
 
-def create_clusters(lines, gap_threshold, max_height, min_height):
+def split_section_per_table(sections, max_height: int):
+    new_sections = []
+
+    for section in sections:
+        split_x = None
+
+        # Find split_x based on header line
+        for line in section:
+            if len(line) == 4 and line[0]['height'] == max_height:
+                second_max_x = line[1]['max_x']
+                third_min_x = line[2]['min_x']
+                split_x = (second_max_x + third_min_x) / 2
+                break
+
+        if split_x is None:
+            # Filter out empty lines before appending
+            cleaned_section = [line for line in section if line]
+            if cleaned_section:
+                new_sections.append(cleaned_section)
+            continue
+
+        # Split each line in the section
+        left_part = []
+        right_part = []
+        for line in section:
+            left_line = [word for word in line if word['max_x'] <= split_x]
+            right_line = [word for word in line if word['min_x'] > split_x]
+
+            # If nothing matches split, keep the entire line in the left
+            if not left_line and not right_line:
+                left_line = line.copy()
+
+            # Only add non-empty lines
+            if left_line:
+                left_part.append(left_line)
+            if right_line:
+                right_part.append(right_line)
+
+        # Add parts only if they are not empty
+        if left_part:
+            new_sections.append(left_part)
+        if right_part:
+            new_sections.append(right_part)
+
+    return new_sections
+
+
+def split_line_per_section(all_lines, max_height: int):
+    split_lines = []
+    current_table = []
+    seen_content = False  # tracks if table content has started after headers
+
+    for line in all_lines:
+        if not line:
+            continue
+
+        heights = [word["height"] for word in line]
+        is_header = any(h == max_height for h in heights)
+        is_content = not is_header  # everything else is treated as content
+
+        if is_header:
+            # If new header appears after content, it means new table starts
+            if seen_content:
+                split_lines.append(current_table)
+                current_table = []
+                seen_content = False  # reset for new table
+            current_table.append(line)
+
+        elif is_content:
+            # Mark that content has started
+            if current_table:
+                seen_content = True
+                current_table.append(line)
+
+    # Append last table
+    if current_table:
+        split_lines.append(current_table)
+
+    return split_lines
+
+
+def create_clusters(lines, big_threshold, medium_threshold, small_threshold, max_height, min_height, page_index):
     clusters_per_line = []
 
     for y, items in sorted(lines.items()):
@@ -161,6 +267,14 @@ def create_clusters(lines, gap_threshold, max_height, min_height):
             prev_x = items[i - 1]["x1"]
             curr_x = items[i]["x0"]
             gap = curr_x - prev_x
+            gap_threshold = big_threshold
+
+            h = items[i]['height']
+
+            if h < 9:
+                gap_threshold = small_threshold
+            elif h < 11:
+                gap_threshold = medium_threshold
 
             if gap > gap_threshold:
                 top_vals = [w["top"] for w in current_cluster]
@@ -169,7 +283,7 @@ def create_clusters(lines, gap_threshold, max_height, min_height):
                 max_height = max(max_height, cluster_height)
                 min_height = min(min_height, cluster_height)
 
-                clusters.append(make_cluster(current_cluster, height=cluster_height))
+                clusters.append(make_cluster(current_cluster, height=cluster_height, page_index=page_index))
                 current_cluster = [items[i]]
             else:
                 current_cluster.append(items[i])
@@ -181,13 +295,13 @@ def create_clusters(lines, gap_threshold, max_height, min_height):
         max_height = max(max_height, cluster_height)
         min_height = min(min_height, cluster_height)
 
-        clusters.append(make_cluster(current_cluster, height=cluster_height))
+        clusters.append(make_cluster(current_cluster, height=cluster_height, page_index=page_index))
         clusters_per_line.append(clusters)
 
     return clusters_per_line, max_height, min_height
 
 
-def make_cluster(words, height):
+def make_cluster(words, height, page_index):
     top = words[0]['top']
     bottom = words[0]['bottom']
     x0 = min(w['x0'] for w in words)
@@ -201,65 +315,93 @@ def make_cluster(words, height):
         'bottom': bottom,
         'x': center_x,
         'min_x': x0,
-        'max_x': x1
+        'max_x': x1,
+        'page_index': page_index
     }
 
 
 def group_vertically(clusters,
                      rects,
                      max_height: int,
-                     min_height: int,
-                     main_page_parsed: bool):
+                     min_height: int):
     """
     Group clusters vertically so that every table row consists of 2 lines,
     separated by horizontal rectangles.
     """
-    row_rects = [rect for rect in rects if rect['height'] < 2]
-    row_rects = sorted(row_rects, key=lambda r: r['top'])
-    col_rects = [rect for rect in rects if rect['height'] > 10]
-    title = ''
+    row_rects = {}
+    col_rects = {}
+
+    for page_index, page_rects in rects.items():
+        page_row_rects = [rect for rect in page_rects if rect['height'] < 2]
+        page_row_rects.sort(key=lambda r: r['top'])  # sort by vertical position
+        page_col_rects = [rect for rect in page_rects if rect['height'] > 10]
+
+        row_rects[page_index] = page_row_rects
+        col_rects[page_index] = page_col_rects
+
     descriptions = []
     value_columns = []
     index = 0
 
-    if not main_page_parsed:
-        for index, cluster in enumerate(clusters):
-            if len(cluster) == 1 and cluster[0]['height'] == max_height:
-                title += cluster[0]['text']
-            elif cluster[0]['height'] == max_height:
-                descriptions, index = manage_descriptions(clusters, index, max_height)
-            elif cluster[0]['height'] == min_height:
-                value_columns, index = manage_value_columns(clusters, index, min_height, col_rects)
-                break
+    # if not main_page_parsed:
+    for index, cluster in enumerate(clusters):
+        if len(cluster) == 0:
+            continue
+
+        if cluster[0]['height'] == max_height:
+            descriptions, index = manage_descriptions(clusters, index, max_height)
+        elif cluster[0]['height'] == min_height:
+            value_columns, index = manage_value_columns(clusters, index, min_height, col_rects)
+            break
 
     clusters = clusters[index:]
     column_barriers = get_description_column_barriers(clusters, value_columns)
     rows = retrieve_data_rows(clusters, row_rects)
-    return title, descriptions, column_barriers, value_columns, rows
+    return descriptions, column_barriers, value_columns, rows
+
+
+def get_title(clusters, max_height):
+    title = ''
+
+    for index, cluster in enumerate(clusters):
+        if len(cluster) == 1 and cluster[0]['height'] == max_height:
+            title += cluster[0]['text']
+        else:
+            return title
+
+    return None
 
 
 def retrieve_data_rows(clusters, rects):
     rows = []
 
-    for i in range(1, len(rects)):
-        prev_line = rects[i - 1]
-        next_line = rects[i]
+    # rects is now grouped by pages => rects[page_index] = list of line rects
+    for page_index, page_rects in rects.items():
+        # Iterate between line gaps within the page
+        for i in range(1, len(page_rects)):
+            prev_line = page_rects[i - 1]
+            next_line = page_rects[i]
 
-        row_clusters = []
-        for cluster in clusters:
-            cluster_top = cluster[0]['top']
-            cluster_bottom = cluster[0]['bottom']
+            row_clusters = []
+            for cluster in clusters:
+                # Skip clusters from other pages
+                if cluster[0]['page_index'] != page_index:
+                    continue
 
-            if cluster_bottom > prev_line['bottom'] and cluster_top < next_line['top']:
-                row_clusters += cluster
+                cluster_top = cluster[0]['top']
+                cluster_bottom = cluster[0]['bottom']
 
-        if row_clusters:
-            rows.append(row_clusters)
+                # Check if cluster lies between two horizontal line rects
+                if cluster_bottom > prev_line['bottom'] and cluster_top < next_line['top']:
+                    row_clusters += cluster
+
+            if row_clusters:
+                rows.append(row_clusters)
 
     return rows
 
 
-def manage_descriptions(clusters, starting_index: int, max_height: int) -> List[str]:
+def manage_descriptions(clusters, starting_index: int, max_height: int) -> Tuple[List[str], int]:
     descriptions = []
     for i in range(starting_index, len(clusters)):
         cluster = clusters[i]
@@ -299,8 +441,30 @@ def manage_value_columns(clusters, starting_index: int, min_height: int, col_rec
                     "text": value["text"],
                     "x": value['x'],
                     'min_x': value['min_x'],
-                    'max_x': value['max_x']
+                    'max_x': value['max_x'],
+                    'page_index': value['page_index']
                 }
+
+    for val in values.values():
+        page_idx = val['page_index']
+        if page_idx not in col_rects:
+            continue
+
+        for col in col_rects[page_idx]:
+            col_x0, col_x1 = col["x0"], col["x1"]
+            if val["min_x"] >= col_x0 - tolerance and val["max_x"] <= col_x1 + tolerance:
+                val["min_x"] = col_x0
+                val["max_x"] = col_x1
+                break
+
+    seen_texts = {}
+    for key, val in values.items():
+        text = val["text"]
+        if text in seen_texts:
+            seen_texts[text] += 1
+            val["text"] = f"{text}_{seen_texts[text]}"
+        else:
+            seen_texts[text] = 0
 
     return [values[k] for k in sorted(values)], index
 
@@ -392,7 +556,7 @@ def format_final_result(column_barriers, value_columns, rows,
 
     for cluster in rows:
         row_data = {
-            "values": {i: "" for i in range(len(value_columns))},
+            "values": {i['text']: "" for i in value_columns},
             "descriptions": {i: "" for i in range(len(column_barriers))}
         }
 
@@ -421,8 +585,8 @@ def format_final_result(column_barriers, value_columns, rows,
                             row_data["descriptions"][matched_col["index"]] + " " + word["text"]
                     ).strip()
                 else:
-                    row_data["values"][matched_col["index"]] = (
-                            row_data["values"][matched_col["index"]] + " " + word["text"]
+                    row_data["values"][matched_col["text"]] = (
+                            row_data["values"][matched_col["text"]] + " " + word["text"]
                     ).strip()
 
         results.append(row_data)
@@ -430,18 +594,101 @@ def format_final_result(column_barriers, value_columns, rows,
     return results
 
 
-def format_into_df(parsed_rows, desc_columns, value_columns) -> pd.DataFrame:
-    table_rows = []
+def check_table_nested(column_barriers, rows):
+    tolerance = 2
+    barrier = column_barriers[0]
+    previous_x = None
 
-    for row in parsed_rows:
-        flat_row = {}
+    for row in rows:
+        for word in row:
+            center_x = (word["min_x"] + word["max_x"]) / 2
+            barrier_min, barrier_max = barrier["barrier"]
+            if barrier_min - tolerance <= center_x <= barrier_max + tolerance:
+                current_x = word['min_x']
+                if previous_x is not None and \
+                        round(current_x) != round(previous_x):
+                    return True
+                previous_x = current_x
 
-        for i, col in enumerate(desc_columns):
-            flat_row[col["col_name"]] = row["descriptions"].get(i, "")
+    return False
 
-        for i, col in enumerate(value_columns):
-            flat_row[col["text"] + '_value'] = row["values"].get(i, "")
 
-        table_rows.append(flat_row)
+def nested_format_final_result(
+        column_barriers: List[Dict],
+        value_columns: List[Dict],
+        rows: List[List[Dict]],
+        tolerance_for_value: int = 10,
+        tolerance_for_top: int = 3,
+        indent_tolerance: int = 1.5
+) -> Dict:
+    """
+    Build a nested dictionary based on description columns hierarchy and value columns.
+    Simplified: alignment_left is always True, only first description word per row is used.
+    """
 
-    return pd.DataFrame(table_rows)
+    final_result: Dict = {}
+    parent_stack: List[str] = []
+    prev_min_x = None
+
+    # Helper: get the first description column word
+    def get_first_desc_word(row: List[Dict]) -> Dict:
+        barrier = column_barriers[0]
+        first_desc_word = None
+        for w in row:
+            center_x = (w["min_x"] + w["max_x"]) / 2
+            barrier_min, barrier_max = barrier["barrier"]
+            if barrier_min - tolerance_for_top <= center_x <= barrier_max + tolerance_for_top:
+                if first_desc_word is None:
+                    first_desc_word = w
+                else:
+                    first_desc_word['text'] += f' {w['text']}'
+
+        return first_desc_word
+
+    # Helper: extract values for the row
+    def get_row_values(row: List[Dict]) -> Dict[str, str]:
+        values: Dict[str, str] = {}
+        for idx, val_col in enumerate(value_columns, start=1):
+            found_value = ""
+            for word in row:
+                center_x = (word["min_x"] + word["max_x"]) / 2
+                if val_col["min_x"] - tolerance_for_value <= center_x <= val_col["max_x"] + tolerance_for_value:
+                    found_value = word["text"]
+                    break
+            values[val_col['text']] = found_value
+        return values
+
+    # Process each row
+    for row_idx, row in enumerate(rows):
+        desc_word = get_first_desc_word(row)
+        if desc_word is None:
+            raise ValueError(f"Row {row_idx} has no description word.")
+
+        current_min_x = desc_word["min_x"]
+        text = desc_word["text"]
+
+        if prev_min_x is not None:
+            if current_min_x > prev_min_x + indent_tolerance:
+                parent_stack.append(text)
+            elif current_min_x < prev_min_x - indent_tolerance:
+                if parent_stack:
+                    parent_stack.pop()
+                    parent_stack.pop()
+
+                parent_stack.append(text)
+            else:
+                if parent_stack:
+                    parent_stack[-1] = text
+                else:
+                    parent_stack.append(text)
+        else:
+            parent_stack.append(text)
+
+        current_dict = final_result
+        for key in parent_stack[:-1]:
+            current_dict = current_dict.setdefault(key, {})
+
+        current_dict[parent_stack[-1]] = get_row_values(row)
+        prev_min_x = current_min_x
+
+    return final_result
