@@ -1,6 +1,8 @@
 ﻿import re
 import string
 
+from datetime import datetime
+
 
 class WordHelper:
     @staticmethod
@@ -66,3 +68,11 @@ class WordHelper:
         Example: "he!!llo123" -> "123"
         """
         return re.sub(r'[^0-9]', '', word)
+
+    @staticmethod
+    def is_date(text: str) -> bool:
+        try:
+            datetime.strptime(text, "%d %B %Y")
+            return True
+        except ValueError:
+            return False
