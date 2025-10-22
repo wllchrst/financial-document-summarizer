@@ -131,3 +131,4 @@ making it more reliable to parse each data from all code of accounts
 
 ---
 **created by William Christian**
+**docstring in function in this project is documented with the help of AI and manually crosschecked by me**

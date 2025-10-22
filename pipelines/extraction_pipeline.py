@@ -180,7 +180,6 @@ def split_section_per_table(sections, max_height: int):
     for section in sections:
         split_x = None
 
-        # Find split_x based on header line
         for line in section:
             if len(line) == 4 and line[0]['height'] == max_height:
                 second_max_x = line[1]['max_x']
@@ -189,30 +188,25 @@ def split_section_per_table(sections, max_height: int):
                 break
 
         if split_x is None:
-            # Filter out empty lines before appending
             cleaned_section = [line for line in section if line]
             if cleaned_section:
                 new_sections.append(cleaned_section)
             continue
 
-        # Split each line in the section
         left_part = []
         right_part = []
         for line in section:
             left_line = [word for word in line if word['max_x'] <= split_x]
             right_line = [word for word in line if word['min_x'] > split_x]
 
-            # If nothing matches split, keep the entire line in the left
             if not left_line and not right_line:
                 left_line = line.copy()
 
-            # Only add non-empty lines
             if left_line:
                 left_part.append(left_line)
             if right_line:
                 right_part.append(right_line)
 
-        # Add parts only if they are not empty
         if left_part:
             new_sections.append(left_part)
         if right_part:
@@ -224,7 +218,7 @@ def split_section_per_table(sections, max_height: int):
 def split_line_per_section(all_lines, max_height: int):
     split_lines = []
     current_table = []
-    seen_content = False  # tracks if table content has started after headers
+    seen_content = False
 
     for line in all_lines:
         if not line:
@@ -232,23 +226,20 @@ def split_line_per_section(all_lines, max_height: int):
 
         heights = [word["height"] for word in line]
         is_header = any(h == max_height for h in heights)
-        is_content = not is_header  # everything else is treated as content
+        is_content = not is_header
 
         if is_header:
-            # If new header appears after content, it means new table starts
             if seen_content:
                 split_lines.append(current_table)
                 current_table = []
-                seen_content = False  # reset for new table
+                seen_content = False
             current_table.append(line)
 
         elif is_content:
-            # Mark that content has started
             if current_table:
                 seen_content = True
                 current_table.append(line)
 
-    # Append last table
     if current_table:
         split_lines.append(current_table)
 
@@ -343,7 +334,6 @@ def group_vertically(clusters,
     value_columns = []
     index = 0
 
-    # if not main_page_parsed:
     for index, cluster in enumerate(clusters):
         if len(cluster) == 0:
             continue
@@ -375,23 +365,19 @@ def get_title(clusters, max_height):
 def retrieve_data_rows(clusters, rects):
     rows = []
 
-    # rects is now grouped by pages => rects[page_index] = list of line rects
     for page_index, page_rects in rects.items():
-        # Iterate between line gaps within the page
         for i in range(1, len(page_rects)):
             prev_line = page_rects[i - 1]
             next_line = page_rects[i]
 
             row_clusters = []
             for cluster in clusters:
-                # Skip clusters from other pages
                 if cluster[0]['page_index'] != page_index:
                     continue
 
                 cluster_top = cluster[0]['top']
                 cluster_bottom = cluster[0]['bottom']
 
-                # Check if cluster lies between two horizontal line rects
                 if cluster_bottom > prev_line['bottom'] and cluster_top < next_line['top']:
                     row_clusters += cluster
 
@@ -492,7 +478,6 @@ def get_description_column_barriers(
     """
 
     def is_inside_value_col(center_x: float) -> bool:
-        """Return True if a point lies within any value column range."""
         return any(v['min_x'] <= center_x <= v['max_x'] for v in value_columns)
 
     candidates = []
@@ -630,7 +615,6 @@ def nested_format_final_result(
     parent_stack: List[str] = []
     prev_min_x = None
 
-    # Helper: get the first description column word
     def get_first_desc_word(row: List[Dict]) -> Dict:
         barrier = column_barriers[0]
         first_desc_word = None
@@ -645,7 +629,6 @@ def nested_format_final_result(
 
         return first_desc_word
 
-    # Helper: extract values for the row
     def get_row_values(row: List[Dict]) -> Dict[str, str]:
         values: Dict[str, str] = {}
         for idx, val_col in enumerate(value_columns, start=1):
@@ -658,7 +641,6 @@ def nested_format_final_result(
             values[val_col['text']] = found_value
         return values
 
-    # Process each row
     for row_idx, row in enumerate(rows):
         desc_word = get_first_desc_word(row)
         if desc_word is None:
